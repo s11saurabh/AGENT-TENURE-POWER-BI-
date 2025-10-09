@@ -1,0 +1,60 @@
+//Calculated column
+
+Tenure =
+VAR sd = Agents[HireDate]
+VAR ed = TODAY()
+VAR TotalMonths =
+    12 * (YEAR(ed) - YEAR(sd))
+    + (MONTH(ed) - MONTH(sd))
+    - IF(DAY(ed) < DAY(sd), 1, 0)
+VAR y = QUOTIENT(TotalMonths, 12)
+VAR m = MOD(TotalMonths, 12)
+RETURN
+IF(
+    TotalMonths < 0,
+    BLANK(),
+    y & " year" & IF(y <> 1, "s", "")
+      & ", "
+      & m & " month" & IF(m <> 1, "s", "")
+)
+
+
+//Measure (recalculates daily):
+
+Tenure (Measure) =
+VAR sd = SELECTEDVALUE(Agents[HireDate])
+VAR ed = TODAY()
+VAR TotalMonths =
+    12 * (YEAR(ed) - YEAR(sd))
+    + (MONTH(ed) - MONTH(sd))
+    - IF(DAY(ed) < DAY(sd), 1, 0)
+VAR y = QUOTIENT(TotalMonths, 12)
+VAR m = MOD(TotalMonths, 12)
+RETURN
+IF(
+    ISBLANK(sd) || TotalMonths < 0,
+    BLANK(),
+    y & " year" & IF(y <> 1, "s", "")
+      & ", "
+      & m & " month" & IF(m <> 1, "s", "")
+)
+
+
+//Power Query
+
+
+let
+    sd = [HireDate],
+    ed = DateTime.Date(DateTime.LocalNow()),
+    totalMonths = (Date.Year(ed) - Date.Year(sd)) * 12
+                 + (Date.Month(ed) - Date.Month(sd))
+                 - (if Date.Day(ed) < Date.Day(sd) then 1 else 0),
+    y = Number.IntegerDivide(totalMonths, 12),
+    m = Number.Mod(totalMonths, 12),
+    txt = if totalMonths < 0 then null
+          else Text.From(y) & " year" & (if y <> 1 then "s" else "")
+             & ", " & Text.From(m) & " month" & (if m <> 1 then "s" else "")
+in
+    txt
+
+
