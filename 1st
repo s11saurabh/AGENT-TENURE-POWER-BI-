@@ -1,3 +1,40 @@
+const { map, filter, takeWhile, scan, repeat } = require("rxjs/operators");
+
+class BasicRXJS {
+  function1(inputStream$) {
+    return inputStream$.pipe(
+      filter(s => s.length > 3),
+      map(s => s.toLowerCase())
+    );
+  }
+
+  function2(inputStream$) {
+    return inputStream$.pipe(
+      map(s => new Set(s.split("")).size)
+    );
+  }
+
+  function3(inputStream$) {
+    return inputStream$.pipe(
+      takeWhile(s => s !== "end")
+    );
+  }
+
+  function4(inputStream$) {
+    return inputStream$.pipe(
+      scan((acc, x) => acc + x, 0),
+      repeat(2)
+    );
+  }
+}
+
+module.exports = { BasicRXJS };
+
+
+
+
+
+
 #include <bits/stdc++.h>
 using namespace std;
 
