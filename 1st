@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+long long determineMaxDataFlow(vector<int> bandwidth, long long streamCount) {
+    int n = (int)bandwidth.size();
+    sort(bandwidth.begin(), bandwidth.end());          
+    long long K = streamCount;
+    long long totalPairs = 1LL * n * n;
+    if (K > totalPairs) K = totalPairs;
+
+    using Node = tuple<long long,int,int>;
+    priority_queue<Node> pq;
+    unordered_set<long long> seen;
+    auto key = [&](int i,int j)->long long { return 1LL*i*n + j; };
+
+    pq.push({(long long)bandwidth[n-1] + bandwidth[n-1], n-1, n-1});
+    seen.insert(key(n-1,n-1));
+
+    long long ans = 0;
+    while (K-- && !pq.empty()) {
+        auto [sum, i, j] = pq.top(); pq.pop();
+        ans += sum;
+
+        if (i-1 >= 0) {
+            long long k1 = key(i-1, j);
+            if (!seen.count(k1)) {
+                seen.insert(k1);
+                pq.push({(long long)bandwidth[i-1] + bandwidth[j], i-1, j});
+            }
+        }
+        if (j-1 >= 0) {
+            long long k2 = key(i, j-1);
+            if (!seen.count(k2)) {
+                seen.insert(k2);
+                pq.push({(long long)bandwidth[i] + bandwidth[j-1], i, j-1});
+            }
+        }
+    }
+    return ans;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n; 
+    if (!(cin >> n)) return 0;
+    vector<int> a(n);
+    for (int i = 0; i < n; ++i) cin >> a[i];
+    long long k; 
+    cin >> k;
+
+    cout << determineMaxDataFlow(a, k) << "\n";
+    return 0;
+}
