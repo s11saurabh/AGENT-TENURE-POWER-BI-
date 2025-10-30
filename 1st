@@ -242,36 +242,3 @@ module.exports = { BasicRXJS };
 
 
 
-
-const { map, filter, takeWhile, scan, repeat } = require('rxjs/operators');
-
-class BasicRXJS {
-  function1(inputStream$) {
-    return inputStream$.pipe(
-      filter(s => typeof s === 'string' && s.length > 3),
-      map(s => s.toLowerCase())
-    );
-  }
-
-  function2(inputStream$) {
-    return inputStream$.pipe(
-      map(s => (typeof s === 'string' ? new Set(s.split('')).size : 0))
-    );
-  }
-
-  function3(inputStream$) {
-    return inputStream$.pipe(
-      takeWhile(s => s !== 'end')
-    );
-  }
-
-  function4(inputStream$) {
-    return inputStream$.pipe(
-      scan((acc, cur) => acc + cur, 0),
-      repeat(1)
-    );
-  }
-}
-
-module.exports = { BasicRXJS };
-
