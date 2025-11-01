@@ -160,7 +160,7 @@ int main() {
     cin.tie(nullptr);
     int n; 
     if(!(cin >> n)) return 0;
-    vector<int> a(n);
+
 
 
 
